@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../schema.yaml
+
+metadata:
+  name: First rule ever
+  description: The description ... whatever will be needed
+  version: 1
+  release_date: 2020/08/20T0 16:00
+  contact:
+    - a@b.c
+  references:
+    - http:/1/2
+
+targets:
+  - path: /bin/bash
+  - path: glob:/bin/*sh
+  - hash: sha1:aabbcc
+
+include:
+  - windows_basic
+
+action:
+  default: block
+  network: pass
+  execs: alert
+  filesystem: pass
+
+rules:
+  network:
+    allow: 
+      - hosts:
+          - example.com
+        connections:
+          - port: 80
+            proto: tcp
+            l7: http
+
+  filesystem:
+    allow:
+      - path: /tmp/xyz/*
+        access: w
+    deny: 
+      - path: "*.exe"
+      - path: "c:/xwindows/*"
+  exec:
+    allow:
+      - path: /bin/*
+        args: regexp for args
+    deny:
+      - path: "*malware*"
+      - path: "*lolbins*"
+  registry:
+    allow:
+      - path: HKCU/Software/whatever/*
+        access: RW
+  parents:
+    allow-any: true
+    deny:
+    - path: cmd.exe
+  env:
+    allow-any: true
+    deny:
+    - key: 'DEBUG'

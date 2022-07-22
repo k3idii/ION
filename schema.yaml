@@ -1,0 +1,278 @@
+---
+"$schema": http://json-schema.org/draft-06/schema#
+"$ref": "#/definitions/IONrule"
+
+definitions:
+
+  IONrule:
+    type: object
+    additionalProperties: false
+    properties:
+      metadata:
+        "$ref": "#/definitions/Metadata"
+      targets:
+        type: array
+        items:
+          "$ref": "#/definitions/Target"
+      include:
+        type: array
+        items:
+          type: string
+      rules:
+        "$ref": "#/definitions/Rules"
+      action:
+        "$ref": "#/definitions/Action"
+    required:
+    - metadata
+    - rules
+    - targets
+    title: IONrule
+
+  Metadata:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      version:
+        type: integer
+      release_date:
+        type: string
+        format: date-time
+      contact:
+        type: array
+        items:
+          type: string
+      references:
+        type: array
+        items:
+          type: string
+    required:
+    - description
+    - name
+    - version
+    title: Metadata
+
+  ActionTypes:
+    enum:
+    - block
+    - pass
+    - alert
+    - log
+
+  Action:
+    type: object
+    additionalProperties: false
+    properties:
+      default:
+        "$ref": "#/definitions/ActionTypes"
+      network:
+        "$ref": "#/definitions/ActionTypes"
+      execs:
+        "$ref": "#/definitions/ActionTypes"
+      registry:
+        "$ref": "#/definitions/ActionTypes"
+      filesystem:
+        "$ref": "#/definitions/ActionTypes"
+    required: []
+    title: Action
+
+  Target:
+    type: object
+    additionalProperties: false
+    properties:
+      path:
+        type: string
+      hash:
+        type: string
+        pattern: "[^:]+:[a-fA-F0-9]+"
+    required: []
+    title: Target
+
+
+  Rules:
+    type: object
+    additionalProperties: false
+    required: []
+    title: Rules
+
+    properties:
+      network:
+        type: object
+        properties:
+          allow:
+            type: array
+            items: 
+              "$ref": "#/definitions/NetworkRuleEntry"
+          deny:
+            type: array
+            items: 
+              "$ref": "#/definitions/NetworkRuleEntry"
+      filesystem:
+        type: object
+        properties:
+          allow:
+            type: array
+            items: 
+              "$ref": "#/definitions/FilesystemRuleEntry"
+          deny:
+            type: array
+            items: 
+              "$ref": "#/definitions/FilesystemRuleEntry"
+      exec:
+        type: object
+        properties:
+          allow:
+            type: array
+            items: 
+              "$ref": "#/definitions/ExecRuleEntry"
+          deny:
+            type: array
+            items: 
+              "$ref": "#/definitions/ExecRuleEntry"
+      registry:
+        type: object
+        properties:
+          allow:
+            type: array
+            items: 
+              "$ref": "#/definitions/RegistryRuleEntry"
+          deny:
+            type: array
+            items: 
+              "$ref": "#/definitions/RegistryRuleEntry"
+      parents:
+        type: object
+        properties:
+          allow-any:
+            type: boolean
+          allow:
+            type: array
+            items: 
+              "$ref": "#/definitions/ParentRuleEntry"
+          deny:
+            type: array
+            items: 
+              "$ref": "#/definitions/ParentRuleEntry"
+      env:
+        type: object
+        properties:
+          allow-any:
+            type: boolean
+          allow:
+            type: array
+            items: 
+              "$ref": "#/definitions/EnvRuleEntry"
+          deny:
+            type: array
+            items: 
+              "$ref": "#/definitions/EnvRuleEntry" 
+
+
+
+  FilesystemRuleEntry:
+    type: object
+    additionalProperties: false
+    properties:
+      path:
+        type: string
+      access:
+        type: string
+    required:
+    - path
+    title: FilesystemRuleEntry
+
+  RegistryRuleEntry:
+    "$ref": "#/definitions/FilesystemRuleEntry"
+
+  ExecRuleEntry:
+    type: object
+    additionalProperties: false
+    properties:
+      path:
+        type: string
+      args:
+        type: string
+    required:
+    - path
+    title: ExecRuleEntry
+
+  ParentRuleEntry:
+    "$ref": "#/definitions/ExecRuleEntry"
+
+  EnvRuleEntry:
+    type: object
+    additionalProperties: false
+    required: []
+    title: EnvRuleEntry
+    properties:
+      key:
+        type: string
+      value:
+        type: string
+
+
+
+  NetworkRuleEntry:
+    type: object
+    additionalProperties: false
+    required: [hosts]
+    properties:
+      hosts : 
+        type: array
+        items: 
+          "$ref": "#/definitions/HostEntry"
+      connections:
+        type: array
+        items: 
+          "$ref": "#/definitions/ConnectionEntry"
+
+  HostEntry:
+    type: string
+
+  ConnectionEntry:
+    type: object
+    additionalProperties: false
+    required: [port]
+    title: ConnectionEntry
+    properties:
+      port : 
+        type: integer
+        minimum: 0
+        maximum: 65535
+      proto:
+        enum:
+        - tcp
+        - udp
+        - icmp
+      l7:
+        type: string
+
+
+
+
+  NetworkRuleEntryOld:
+    type: object
+    additionalProperties: false
+    properties:
+      protocol:
+        enum:
+        - tcp
+        - udp
+        - icmp
+      host:
+        type: array
+        items:
+          type: string
+      port:
+        type: array
+        items:
+          type: integer
+          minimum: 0
+          maximum: 65535
+      l7:
+        type: string
+
+    

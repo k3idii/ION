@@ -1,0 +1,15 @@
+metadata:
+  name: "Notepad eample"
+  description: "The description"
+  version: 1
+  release_date: 2021/08/21 16:00 +T01
+
+targets:
+  - path: c:/windows/system32/notepad.exe
+
+rules:
+  action:
+    default: block
+  filesystem:
+    - path: "*"
+      access: rw   

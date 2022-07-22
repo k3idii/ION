@@ -20,6 +20,8 @@ Like IOC.
 * well-structured
 * diff-able
 * stored in repo as text files
+* follow Python PEP020 guide [https://peps.python.org/pep-0020/](https://peps.python.org/pep-0020/)
+
 
 ## Implementation ?
 Rules in this format can be later translated to solution-specific format. 
@@ -32,11 +34,11 @@ For example (Planned implementation / shortlist):
  
 
 ## Formats of data:
-
+```
 xxx.ion.yaml  = plaintext yaml <- source 
 xxx.ion.json  = plaintext json 
 xxx.ion.jwt   = JWT  ( to handle signed stuff )
-
+```
 
 ## syntax:
 
@@ -47,6 +49,8 @@ xxx.ion.jwt   = JWT  ( to handle signed stuff )
 
 
 # OPEN PROBLEMS: 
+
+## How to handle script interpreters/etc
 
 ## DNS and resolve 
 * passive tools will see IP connectivity in IP level not DNS
